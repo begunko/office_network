@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Внутренняя сеть</title>
+    <style>
+        .navbar { background: #f8f9fa; padding: 1rem; }
+        .post { border: 1px solid #ddd; margin: 1rem 0; padding: 1rem; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        {% if user.is_authenticated %}
+            Добро пожаловать, {{ user.username }}!
+            <a href="{% url 'logout' %}">Выйти</a>
+        {% else %}
+            <a href="{% url 'login' %}">Войти</a>
+        {% endif %}
+    </nav>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
