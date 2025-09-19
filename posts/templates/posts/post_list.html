@@ -1,0 +1,40 @@
+<!-- templates/posts/post_list.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Все посты</h1>
+
+  <a href="{% url 'post_create' %}" class="btn">➕ Создать новый пост</a>
+
+  <div class="filters">
+    <h3>Фильтры:</h3>
+    <a href="?type=problem" class="filter-btn">Проблемы</a>
+    <a href="?type=suggestion" class="filter-btn">Предложения</a>
+    <a href="?type=blog" class="filter-btn">Блог</a>
+    <a href="{% url 'post_list' %}" class="filter-btn">Все</a>
+  </div>
+
+  {% for post in posts %}
+    <div class="post">
+      <h2>{{ post.title }}</h2>
+      <p class="post-meta">
+        Автор: {{ post.author.username }} | Тип: {{ post.get_post_type_display }} |
+        {{ post.created_at|date:'d.m.Y H:i' }}
+        {% if post.category %}
+          | Категория: {{ post.category.name }}
+        {% endif %}
+      </p>
+      <p>{{ post.content|truncatewords:50 }}</p>
+
+      <div class="post-actions">
+        <a href="{% url 'post_detail' post.id %}" class="btn">Читать далее</a>
+        <span class="likes">❤️ {{ post.likes.count }} лайков</span>
+        <span class="comments">💬 {{ post.comments.count }} комментариев</span>
+      </div>
+    </div>
+  {% empty %}
+    <div class="no-posts">
+      <p>Пока нет постов. Будьте первым!</p>
+    </div>
+  {% endfor %}
+{% endblock %}

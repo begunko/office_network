@@ -1,0 +1,28 @@
+<!-- templates/posts/search_results.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Результаты поиска</h1>
+
+  {% if query %}
+    <p>
+      Результаты по запросу: "<strong>{{ query }}</strong>"
+    </p>
+  {% endif %}
+
+  {% for post in posts %}
+    <div class="post">
+      <h2>{{ post.title }}</h2>
+      <p class="post-meta">Автор: {{ post.author.username }} |
+        {{ post.created_at|date:'d.m.Y H:i' }}</p>
+      <p>{{ post.content|truncatewords:30 }}</p>
+      <a href="{% url 'post_detail' post.id %}" class="btn">Читать далее</a>
+    </div>
+  {% empty %}
+    <div class="no-results">
+      <p>По вашему запросу ничего не найдено.</p>
+    </div>
+  {% endfor %}
+
+  <a href="{% url 'post_list' %}" class="btn">← Назад к списку постов</a>
+{% endblock %}

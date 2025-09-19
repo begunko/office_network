@@ -1,14 +1,23 @@
+<!-- templates/users/profile.html -->
 {% extends 'base.html' %}
 
 {% block content %}
   <h2>Мой профиль</h2>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Сохранить</button>
+    <button type="submit">Сохранить изменения</button>
   </form>
 
-  <h3>Моя информация</h3>
+  <hr />
+  <h3>Информация о аккаунте</h3>
   <p>
     <strong>Имя пользователя:</strong> {{ user.username }}
   </p>
@@ -18,9 +27,9 @@
   <p>
     <strong>Статус:</strong>
     {% if user.is_approved %}
-      ✅ Подтвержден
+      ✅ Подтвержден администратором
     {% else %}
-      ⏳ Ожидает подтверждения
+      ⏳ Ожидает подтверждения администратором
     {% endif %}
   </p>
 {% endblock %}

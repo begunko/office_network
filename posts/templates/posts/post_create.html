@@ -1,0 +1,42 @@
+<!-- templates/posts/post_create.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Создать новый пост</h1>
+
+<form method="post">
+    {% csrf_token %}
+    
+    <div class="form-group">
+        <label for="title">Заголовок:</label>
+        <input type="text" id="title" name="title" required>
+    </div>
+
+    <div class="form-group">
+        <label for="content">Содержание:</label>
+        <textarea id="content" name="content" rows="6" required></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="post_type">Тип поста:</label>
+        <select id="post_type" name="post_type" required>
+            <option value="problem">Проблема</option>
+            <option value="suggestion">Предложение</option>
+            <option value="blog">Блог</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="category">Категория (опционально):</label>
+        <select id="category" name="category">
+            <option value="">-- Выберите категорию --</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button type="submit" class="btn">Опубликовать</button>
+    <a href="{% url 'post_list' %}" class="btn">Отмена</a>
+</form>
+{% endblock %}

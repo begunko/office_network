@@ -1,0 +1,15 @@
+<!-- templates/feedback/feedback_create.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Оставить обратную связь</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    <textarea name="content" rows="5" cols="40" placeholder="Ваши предложения или замечания..."></textarea>
+    <br />
+    <button type="submit">Отправить</button>
+  </form>
+
+  <a href="{% url 'feedback_list' %}">← Назад к списку</a>
+{% endblock %}

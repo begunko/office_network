@@ -1,0 +1,37 @@
+<!-- templates/users/user_detail.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Профиль пользователя: {{ user_profile.username }}</h2>
+
+  <div>
+    <h3>Основная информация</h3>
+    <p>
+      <strong>Имя:</strong> {{ user_profile.first_name }}
+    </p>
+    <p>
+      <strong>Фамилия:</strong> {{ user_profile.last_name }}
+    </p>
+    <p>
+      <strong>Email:</strong> {{ user_profile.email }}
+    </p>
+    <p>
+      <strong>Должность:</strong> {{ user_profile.position|default:'Не указана' }}
+    </p>
+    <p>
+      <strong>Статус:</strong>
+      {% if user_profile.is_approved %}
+        ✅ Подтвержден
+      {% else %}
+        ⏳ Ожидает подтверждения
+      {% endif %}
+    </p>
+  </div>
+
+  <div>
+    <h3>Навыки</h3>
+    <p>{{ user_profile.skills|default:'Навыки не указаны'|linebreaks }}</p>
+  </div>
+
+  <a href="{% url 'user_list' %}">← Назад к списку пользователей</a>
+{% endblock %}

@@ -1,0 +1,25 @@
+<!-- templates/feedback/feedback_list.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Обратная связь</h2>
+
+  <a href="{% url 'feedback_create' %}">+ Новая обратная связь</a>
+
+  {% for feedback in feedbacks %}
+    <div class="feedback">
+      <p>{{ feedback.content }}</p>
+      <p>
+        <small>От: {{ feedback.author.username }} | {{ feedback.created_at|date:'d.m.Y H:i' }}</small>
+      </p>
+      {% if feedback.is_processed %}
+        <span style="color: green;">✅ Обработано</span>
+      {% else %}
+        <span style="color: orange;">⏳ В обработке</span>
+      {% endif %}
+    </div>
+    <hr />
+  {% empty %}
+    <p>Пока нет обратной связи.</p>
+  {% endfor %}
+{% endblock %}

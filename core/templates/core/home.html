@@ -1,0 +1,32 @@
+<!-- templates/core/home.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Добро пожаловать во внутреннюю сеть!</h1>
+
+<div>
+    <h2>Последние посты</h2>
+    {% for post in posts %}
+    <div class="post">
+        <h3>{{ post.title }}</h3>
+        <p>{{ post.content|truncatewords:30 }}</p>
+        <p><small>Автор: {{ post.author.username }} | {{ post.created_at|date:"d.m.Y H:i" }}</small></p>
+        <a href="{% url 'post_detail' post.id %}">Читать далее</a>
+    </div>
+    {% empty %}
+    <p>Пока нет постов.</p>
+    {% endfor %}
+</div>
+
+<div>
+    <h2>Быстрые действия</h2>
+    <ul>
+        <li><a href="{% url 'post_list' %}">Все посты</a></li>
+        <li><a href="{% url 'post_create' %}">Создать пост</a></li>
+        <li><a href="{% url 'feedback_create' %}">Оставить обратную связь</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'profile' %}">Мой профиль</a></li>
+        {% endif %}
+    </ul>
+</div>
+{% endblock %}

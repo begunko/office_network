@@ -1,0 +1,11 @@
+<!-- templates/registration/logged_out.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="logout-message">
+    <h2>Вы успешно вышли из системы</h2>
+    <p>Спасибо за использование нашей внутренней сети.</p>
+    <a href="{% url 'login' %}" class="btn">Войти снова</a>
+    <a href="{% url 'home' %}" class="btn">На главную</a>
+  </div>
+{% endblock %}
