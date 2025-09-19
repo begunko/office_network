@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Мой профиль</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Сохранить</button>
+  </form>
+
+  <h3>Моя информация</h3>
+  <p>
+    <strong>Имя пользователя:</strong> {{ user.username }}
+  </p>
+  <p>
+    <strong>Дата регистрации:</strong> {{ user.date_joined|date:'d.m.Y H:i' }}
+  </p>
+  <p>
+    <strong>Статус:</strong>
+    {% if user.is_approved %}
+      ✅ Подтвержден
+    {% else %}
+      ⏳ Ожидает подтверждения
+    {% endif %}
+  </p>
+{% endblock %}
