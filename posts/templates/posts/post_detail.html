@@ -2,57 +2,55 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="post-detail">
+  <div class="post-detail">
     <h1>{{ post.title }}</h1>
     <p class="post-meta">
-        Автор: {{ post.author.username }} | 
-        Тип: {{ post.get_post_type_display }} | 
-        {{ post.created_at|date:"d.m.Y H:i" }}
-        {% if post.category %}
+      Автор: {{ post.author.username }} | Тип: {{ post.get_post_type_display }} |
+      {{ post.created_at|date:'d.m.Y H:i' }}
+      {% if post.category %}
         | Категория: {{ post.category.name }}
-        {% endif %}
+      {% endif %}
     </p>
-    
-    <div class="post-content">
-        {{ post.content|linebreaks }}
-    </div>
+
+    <div class="post-content">{{ post.content|linebreaks }}</div>
 
     <div class="post-actions">
-        <a href="{% url 'post_list' %}" class="btn">← Назад к списку</a>
-        <a href="{% url 'toggle_like' post.id %}" class="btn">
-            {% if user.is_authenticated and post.likes.filter.user=user %}
-            💔 Убрать лайк
-            {% else %}
-            ❤️ Лайк
-            {% endif %}
-            ({{ post.likes.count }})
-        </a>
+      <a href="{% url 'post_list' %}" class="btn">← Назад к списку</a>
+      <a href="{% url 'toggle_like' post.id %}" class="btn">
+        {% if user.is_authenticated and user_has_liked %}
+          💔 Убрать лайк
+        {% else %}
+          ❤️ Лайк
+        {% endif %}({{ post.likes.count }})
+      </a>
     </div>
 
     <div class="comments-section">
-        <h3>Комментарии ({{ post.comments.count }})</h3>
-        
-        {% if user.is_authenticated %}
-        <form method="post" action="{% url 'add_comment' post.id %}">
-            {% csrf_token %}
-            <textarea name="content" rows="3" placeholder="Оставьте комментарий..." required></textarea>
-            <button type="submit" class="btn">Отправить</button>
-        </form>
-        {% else %}
-        <p>Чтобы оставить комментарий, <a href="{% url 'login' %}">войдите</a> в систему.</p>
-        {% endif %}
+      <h3>Комментарии ({{ post.comments.count }})</h3>
 
-        {% for comment in post.comments.all %}
+      {% if user.is_authenticated %}
+        <form method="post" action="{% url 'add_comment' post.id %}">
+          {% csrf_token %}
+          <textarea name="content" rows="3" placeholder="Оставьте комментарий..." required></textarea>
+          <button type="submit" class="btn">Отправить</button>
+        </form>
+      {% else %}
+        <p>
+          Чтобы оставить комментарий, <a href="{% url 'login' %}">войдите</a> в систему.
+        </p>
+      {% endif %}
+
+      {% for comment in post.comments.all %}
         <div class="comment">
-            <p class="comment-meta">
-                <strong>{{ comment.author.username }}</strong> - 
-                {{ comment.created_at|date:"d.m.Y H:i" }}
-            </p>
-            <p>{{ comment.content }}</p>
+          <p class="comment-meta">
+            <strong>{{ comment.author.username }}</strong> -
+            {{ comment.created_at|date:'d.m.Y H:i' }}
+          </p>
+          <p>{{ comment.content }}</p>
         </div>
-        {% empty %}
+      {% empty %}
         <p>Пока нет комментариев.</p>
-        {% endfor %}
+      {% endfor %}
     </div>
-</div>
+  </div>
 {% endblock %}

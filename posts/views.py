@@ -19,7 +19,14 @@ def post_list(request):
 
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    return render(request, 'posts/post_detail.html', {'post': post})
+    user_has_liked = False
+    if request.user.is_authenticated:
+        user_has_liked = post.likes.filter(user=request.user).exists()
+
+    return render(request, 'posts/post_detail.html', {
+        'post': post,
+        'user_has_liked': user_has_liked
+    })
 
 
 @login_required

@@ -1,0 +1,51 @@
+<!-- templates/feedback/feedback_detail.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="feedback-detail">
+    <h1>{{ feedback.title }}</h1>
+    <p class="feedback-meta">
+      Автор: {{ feedback.author.username }} | Тип: {{ feedback.get_feedback_type_display }} | Приоритет: <span class="priority-{{ feedback.priority }}">{{ feedback.get_priority_display }}</span> |
+      {{ feedback.created_at|date:'d.m.Y H:i' }}
+      {% if feedback.is_processed %}
+        | Обработано: {{ feedback.processed_by.username }} ({{ feedback.processed_at|date:'d.m.Y H:i' }})
+      {% endif %}
+    </p>
+
+    <div class="feedback-content">{{ feedback.content|linebreaks }}</div>
+
+    {% if attachments %}
+      <div class="feedback-attachments">
+        <h3>Прикрепленные файлы:</h3>
+        <ul>
+          {% for attachment in attachments %}
+            <li>
+              <a href="{{ attachment.file.url }}" target="_blank">{{ attachment.file.name }}</a>
+              ({{ attachment.uploaded_at|date:'d.m.Y H:i' }})
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    {% if feedback.response %}
+      <div class="feedback-response">
+        <h3>Ответ:</h3>
+        <p>{{ feedback.response|linebreaks }}</p>
+      </div>
+    {% endif %}
+
+    {% if user.is_staff and not feedback.is_processed %}
+      <div class="feedback-admin">
+        <h3>Обработка обратной связи</h3>
+        <form method="post" action="{% url 'feedback_process' feedback.id %}">
+          {% csrf_token %}
+          {{ response_form.as_p }}
+          <button type="submit" class="btn">Сохранить</button>
+        </form>
+      </div>
+    {% endif %}
+
+    <a href="{% url 'feedback_list' %}" class="btn">← Назад к списку</a>
+  </div>
+{% endblock %}

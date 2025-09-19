@@ -2,14 +2,53 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Оставить обратную связь</h2>
+  <h1>Новая обратная связь</h1>
 
-  <form method="post">
+  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <textarea name="content" rows="5" cols="40" placeholder="Ваши предложения или замечания..."></textarea>
-    <br />
-    <button type="submit">Отправить</button>
-  </form>
 
-  <a href="{% url 'feedback_list' %}">← Назад к списку</a>
+    <div class="form-group">
+      <label for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+      {{ form.title }}
+      {% if form.title.errors %}
+        <div class="error">{{ form.title.errors }}</div>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.content.id_for_label }}">{{ form.content.label }}</label>
+      {{ form.content }}
+      {% if form.content.errors %}
+        <div class="error">{{ form.content.errors }}</div>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.feedback_type.id_for_label }}">{{ form.feedback_type.label }}</label>
+      {{ form.feedback_type }}
+      {% if form.feedback_type.errors %}
+        <div class="error">{{ form.feedback_type.errors }}</div>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.priority.id_for_label }}">{{ form.priority.label }}</label>
+      {{ form.priority }}
+      {% if form.priority.errors %}
+        <div class="error">{{ form.priority.errors }}</div>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.attachments.id_for_label }}">{{ form.attachments.label }}</label>
+      {{ form.attachments }}
+      {% if form.attachments.errors %}
+        <div class="error">{{ form.attachments.errors }}</div>
+      {% endif %}
+      <small>Для выбора нескольких файлов удерживайте Ctrl (Cmd на Mac)</small>
+    </div>
+
+    <button type="submit" class="btn">Отправить</button>
+    <a href="{% url 'feedback_list' %}" class="btn">Отмена</a>
+  </form>
 {% endblock %}

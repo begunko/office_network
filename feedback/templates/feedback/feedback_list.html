@@ -2,23 +2,71 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Обратная связь</h2>
+  <h1>Обратная связь</h1>
 
-  <a href="{% url 'feedback_create' %}">+ Новая обратная связь</a>
+  <div class="feedback-actions">
+    <a href="{% url 'feedback_create' %}" class="btn">➕ Новая обратная связь</a>
+
+    <div class="filters">
+      <h3>Фильтры:</h3>
+      <div>
+        <strong>Тип:</strong>
+        <a href="?{% if current_status %}
+            status={{ current_status }}&
+          {% endif %}"
+          class="filter-btn">
+          Все
+        </a>
+        {% for type_value, type_name in feedback_types %}
+          <a href="?type={{ type_value }}{% if current_status %}
+              &status={{ current_status }}
+            {% endif %}"
+            class="filter-btn">
+            {{ type_name }}
+          </a>
+        {% endfor %}
+      </div>
+      <div>
+        <strong>Статус:</strong>
+        <a href="?{% if current_type %}
+            type={{ current_type }}&
+          {% endif %}"
+          class="filter-btn">
+          Все
+        </a>
+        <a href="?status=unprocessed{% if current_type %}
+            &type={{ current_type }}
+          {% endif %}"
+          class="filter-btn">
+          Необработанные
+        </a>
+        <a href="?status=processed{% if current_type %}
+            &type={{ current_type }}
+          {% endif %}"
+          class="filter-btn">
+          Обработанные
+        </a>
+      </div>
+    </div>
+  </div>
 
   {% for feedback in feedbacks %}
-    <div class="feedback">
-      <p>{{ feedback.content }}</p>
-      <p>
-        <small>От: {{ feedback.author.username }} | {{ feedback.created_at|date:'d.m.Y H:i' }}</small>
-      </p>
-      {% if feedback.is_processed %}
-        <span style="color: green;">✅ Обработано</span>
+    <div class="feedback {% if feedback.is_processed %}
+        processed
       {% else %}
-        <span style="color: orange;">⏳ В обработке</span>
-      {% endif %}
+        unprocessed
+      {% endif %}">
+      <h3>{{ feedback.title }}</h3>
+      <p class="feedback-meta">
+        Автор: {{ feedback.author.username }} | Тип: {{ feedback.get_feedback_type_display }} | Приоритет: <span class="priority-{{ feedback.priority }}">{{ feedback.get_priority_display }}</span> |
+        {{ feedback.created_at|date:'d.m.Y H:i' }}
+        {% if feedback.is_processed %}
+          | Обработано: {{ feedback.processed_by.username }} ({{ feedback.processed_at|date:'d.m.Y H:i' }})
+        {% endif %}
+      </p>
+      <p>{{ feedback.content|truncatewords:30 }}</p>
+      <a href="{% url 'feedback_detail' feedback.id %}" class="btn">Подробнее</a>
     </div>
-    <hr />
   {% empty %}
     <p>Пока нет обратной связи.</p>
   {% endfor %}
